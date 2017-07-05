@@ -14,33 +14,21 @@ export class HomePage {
     slideTwoForm: FormGroup;
     submitAttempt: boolean = false;
     
-    constructor(public navCtrl: NavController, public formBuilder: FormBuilder) {
-        this.slideOneForm = formBuilder.group({
-            firstName : ['',Validators.compose([Validators.maxLength(30),Validators.pattern('[a-zA-Z]*'),Validators.required])],
-            lastName : ['',Validators.compose([Validators.maxLength(30),Validators.pattern('[a-zA-Z]*'),Validators.required])],
-            phoneNumber:[''],
-            age:['',AgeValidator.isValid]
-        });
-
-        this.slideTwoForm = formBuilder.group({
-            username : ['',Validators.compose([
-                Validators.maxLength(30),
-                Validators.pattern('[a-zA-Z]*'),
-                Validators.required,
-                UsernameValidator.checkUsername
-                ])],
-            password : ['',Validators.compose([
-                    Validators.maxLength(30),
-                    Validators.pattern('[a-zA-Z]*'),
-                    Validators.required
-                ])],
-            email:['',Validators.compose([
-                    Validators.maxLength(30),
-                    Validators.pattern('[a-zA-Z]*'),
-                    Validators.required
-                ])],
-        });
-    }
+constructor(public navCtrl: NavController, public formBuilder: FormBuilder) {
+ 
+    this.slideOneForm = formBuilder.group({
+        firstName: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
+        lastName: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Z ]*'), Validators.required])],
+        age: ['', AgeValidator.isValid]
+    });
+ 
+    this.slideTwoForm = formBuilder.group({
+        username: ['', Validators.compose([Validators.required, Validators.pattern('[a-zA-Z]*')]), UsernameValidator.checkUsername],
+        privacy: ['', Validators.required],
+        bio: ['']
+    });
+ 
+}
     
     next(){
         this.signupSlider.slideNext();
