@@ -42,7 +42,7 @@ export class PasswordresetPage {
 
   submit() {
     this.loader = this.loadingCtrl.create({
-      content: "Iniciando sesi&oacute;n..."
+      content: "Enviando correo..."
     });
     this.loader.present();
     this.email = this.resetForm.controls["email"].value;

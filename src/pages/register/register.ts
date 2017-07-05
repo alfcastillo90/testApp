@@ -87,7 +87,7 @@ export class RegisterPage {
             sessionStorage.setItem('username', this.email);
          }
          else {
-            this.showAlert('Inicio de sesión fallido', 'Usuario y/o contraseña erroneos');
+            this.showAlert('Su cuenta aun no ha sido activada', 'Espere por su activacion');
          }     
       }
        
@@ -130,7 +130,7 @@ export class RegisterPage {
     }, 9);
   }
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    console.log('ionViewDidLoad register page');
   }
 
 }
