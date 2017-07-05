@@ -1,17 +1,13 @@
 import { Component } from '@angular/core';
+import { Http,Headers,RequestOptions } from '@angular/http';
 import { Nav, Platform, AlertController, LoadingController, NavController, NavParams, ToastController, MenuController, ViewController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HomePage } from '../home/home';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { PasswordresetPage } from '../passwordreset/passwordreset';
+import { RegisterPage } from '../register/register';
 import 'rxjs/add/operator/map';
 import { SplashScreen } from '@ionic-native/splash-screen';
-/**
- * Generated class for the LoginPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
-
+import * as Globals from '../../app/globals';
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -21,9 +17,8 @@ export class LoginPage {
   public loader: any;
   public username: any;
   public password: any;
-  public contador: number;
   loginForm: FormGroup;
-  constructor(private splashscreen: SplashScreen, public viewCtrl: ViewController, public platform: Platform, public menuCtrl: MenuController, public navCtrl: NavController, public alertCtrl: AlertController, private formBuilder: FormBuilder, public http: Http, public loadingCtrl: LoadingController, public toastCtrl: ToastController, public navParams: NavParams) {
+  constructor(public http: Http,private splashscreen: SplashScreen, public viewCtrl: ViewController, public platform: Platform, public menuCtrl: MenuController, public navCtrl: NavController, public alertCtrl: AlertController, private formBuilder: FormBuilder, public loadingCtrl: LoadingController, public toastCtrl: ToastController, public navParams: NavParams) {
     this.loginForm = formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -57,19 +52,36 @@ export class LoginPage {
       content: "Iniciando sesi&oacute;n..."
     });
     this.loader.present();
-    let username: string = this.loginForm.controls["username"].value, password: string = this.loginForm.controls["password"].value;
-    this.setUserAndPassword(username, password);
+    this.username = this.loginForm.controls["username"].value;
+    this.password = this.loginForm.controls["password"].value;
+    this.setUserAndPassword();
     this.loader.dismiss();
   }
-  setUserAndPassword(username, password) {
-    if (username == "demo" && password == "demo") {
-      this.sendNotification('Bienvenido ' + username, true);
-      sessionStorage.setItem('userid', "1");
-      sessionStorage.setItem('username', username);
-    }
-    else {
-      this.showAlert('Inicio de sesión fallido', 'Usuario y/o contraseña erroneos')
-    }
+  setUserAndPassword() {
+    this.username = this.username.replace("@","%40");
+    let headers: any = new Headers({ 
+                                  'Accept':Globals.Type,
+                                  'App':Globals.App,
+                                  'Content-Type': Globals.Type,
+                                  'Password':this.password
+                                });
+    let options : any = new RequestOptions({"headers":headers});
+    let url : any = Globals.ApiURI+this.username;
+    this.http.put(url,"",options).map(res => res.json()).subscribe(data =>{
+      
+      this.items = data;
+      if(this.items.active){
+        if(this.items.active == true){
+            this.sendNotification('Bienvenido ' + this.username, true);
+            sessionStorage.setItem('userid', "1");
+            sessionStorage.setItem('username', this.username);
+         }
+         else {
+            this.showAlert('Inicio de sesión fallido', 'Usuario y/o contraseña erroneos');
+         }     
+      }
+       
+    });
   }
 
   sendNotification(message, login = false): void {
@@ -82,11 +94,16 @@ export class LoginPage {
       this.navCtrl.setRoot(HomePage);
     }
   }
-
+  registerPage(){
+    this.navCtrl.setRoot(RegisterPage);
+  }
+  recoveryPassword(){
+    this.navCtrl.setRoot(PasswordresetPage)
+  }
   backbuttonAction() {
     this.platform.registerBackButtonAction(() => {
       let backbutton = this.alertCtrl.create({
-        message: '¿Desea salir de la aplicacion y Cerrar sesión?',
+        message: '¿Desea salir de la aplicacion?',
         buttons: [{
           text: 'Si',
           handler: () => {

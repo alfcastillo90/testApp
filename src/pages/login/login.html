@@ -6,7 +6,7 @@
 <ion-content class="login-content" padding>
   <ion-row style="padding-top: 10vh">
     <ion-col center style="text-align: center;" class="bounceIn">
-       <h1 class="title-color-0">Tunten App</h1>
+       <h1 class="title-color-0">Tuten App</h1>
     </ion-col>
   </ion-row>
   <p *ngIf="submitAttempt" style="color: #ea6153;">Debe ingresar nombre de usuario y contraseña.</p>
@@ -21,6 +21,14 @@
       <ion-row>
         <ion-col class="signup-col">
           <button ion-button class="submit-btn" full type="submit" [disabled]="!loginForm.valid" >Login</button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+            <button ion-button (click)="registerPage()">Crear Cuenta</button>
+        </ion-col>
+        <ion-col>
+            <button ion-button (click)="recoveryPassword()">Recuperar contrase&ntilde;a</button>
         </ion-col>
       </ion-row>
     </form>
