@@ -1,7 +1,8 @@
 import { Component,ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { NavController } from 'ionic-angular';
-
+import { AgeValidator } from '../../validators/age';
+import { UsernameValidator } from '../../validators/username';
 @Component({
     selector: 'page-home',
     templateUrl: 'home.html'
@@ -15,15 +16,29 @@ export class HomePage {
     
     constructor(public navCtrl: NavController, public formBuilder: FormBuilder) {
         this.slideOneForm = formBuilder.group({
-            firstName : [''],
-            lastName : [''],
-            age:['']
+            firstName : ['',Validators.compose([Validators.maxLength(30),Validators.pattern('[a-zA-Z]*'),Validators.required])],
+            lastName : ['',Validators.compose([Validators.maxLength(30),Validators.pattern('[a-zA-Z]*'),Validators.required])],
+            phoneNumber:[''],
+            age:['',AgeValidator.isValid]
         });
 
         this.slideTwoForm = formBuilder.group({
-            username : [''],
-            password : [''],
-            bio:['']
+            username : ['',Validators.compose([
+                Validators.maxLength(30),
+                Validators.pattern('[a-zA-Z]*'),
+                Validators.required,
+                UsernameValidator.checkUsername
+                ])],
+            password : ['',Validators.compose([
+                    Validators.maxLength(30),
+                    Validators.pattern('[a-zA-Z]*'),
+                    Validators.required
+                ])],
+            email:['',Validators.compose([
+                    Validators.maxLength(30),
+                    Validators.pattern('[a-zA-Z]*'),
+                    Validators.required
+                ])],
         });
     }
     
@@ -36,7 +51,20 @@ export class HomePage {
     }
     
     save(){
-        
+ 
+        this.submitAttempt = true;
+    
+        if(!this.slideOneForm.valid){
+            this.signupSlider.slideTo(0);
+        } 
+        else if(!this.slideTwoForm.valid){
+            this.signupSlider.slideTo(1);
+        }
+        else {
+            console.log("success!")
+            console.log(this.slideOneForm.value);
+            console.log(this.slideTwoForm.value);
+        }
     }
 
 }
